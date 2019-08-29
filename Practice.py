@@ -1,5 +1,9 @@
 import time
-import pip
+from datetime import datetime
+#import pip
+from time import struct_time
+
+
 from elasticsearch import Elasticsearch
 
 #try:
@@ -10,16 +14,37 @@ from elasticsearch import Elasticsearch
 #   print("installing Elasticsearch")
 
 print("Time.Time() = ", time.time())
-
 print("Time.gmtime() = ", time.gmtime())
 
-timeString = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
+gmtime = time.gmtime()
+timeString = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", gmtime)
 print("STRFTIME = ", timeString)
 
-es = Elasticsearch()
+formatStr = "%Y-%m-%dT%H:%M:%S.%fZ"
 
-res = es.search(index="twitter", body={"query": {"range": {"time": {"gte": timeString}}}})
-print(res['hits'])
+dt = datetime.now()
+print(repr(dt))
+datetimeString = datetime.strftime(dt, formatStr)
+print("datetime string = ", datetimeString)
+
+datetimeString2 = "2019-08-26T13:13:13.456Z"
+print("datetime string 2 = ", datetimeString2)
+dt2 = datetime.strptime(datetimeString2, formatStr)
+print(repr(dt2))
+
+datetimeNow = datetime.now()
+time.sleep(5)
+datetimeFuture = datetime.now()
+
+epoch = datetime.utcfromtimestamp(0)
+nowSeconds = (datetimeNow - epoch).total_seconds()
+futureSeconds = (datetimeFuture - epoch).total_seconds()
+print(futureSeconds - nowSeconds)
+
+#es = Elasticsearch()
+
+#res = es.search(index="twitter", body={"query": {"range": {"time": {"gte": timeString}}}})
+#print(res['hits'])
 
 
 
